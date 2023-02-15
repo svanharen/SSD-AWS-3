@@ -1,6 +1,8 @@
 const express = require('express')
 const fs = require('fs')
 const multer = require('multer')
+require('dotenv').config()
+const database = require('./database')
 
 const upload = multer({ dest: 'images/' })
 
@@ -20,7 +22,14 @@ app.post('/api/images', upload.single('image'), (req, res) => {
     const imageName = req.file.filename
     const description = req.body.description
 
-    console.log(description, imageName)
+    //Database action
+    try{
+        database.addImage(imageName, description)
+        console.log(description, imageName)
+        
+    }catch(err){
+        console.log(err)
+    }
     res.send({description, imageName})
 })
 
